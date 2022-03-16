@@ -3,10 +3,13 @@ from tkinter import messagebox
 import json
 import re
 import os
+
 filePath=os.path.abspath(os.path.dirname(__file__)) + "\\"
 fileName="birthday.txt"
 newWin=False;
+
 def findBirthday():
+    #it load the birthday of the selected name
     global newWin
     global cont
     global ID
@@ -38,9 +41,11 @@ def findBirthday():
             root.destroy()
         else:
             return None
-    print(cont)
+    #print(cont)
+
 #called from save button in second window
 def saveBirthday():
+    #will save the new birthday on the txt file
     dateReg=re.compile(r'^\d{4}$')
     year=e1_win2.get()
     if dateReg.search(year) == None:
@@ -55,6 +60,21 @@ def saveBirthday():
         file.close();
         messagebox.showinfo(title="Saved!", message=ID.split(".")[0] + " " + ID.split(".")[1] + "'s birthday '" + str(date) +"' was saved!" )
         win2.destroy()
+
+
+def on_entry_click(event):
+    #function that gets called whenever entry e1_win2 is clicked
+    if e1_win2.get() == 'yyyy':
+       e1_win2.delete(0, "end") # delete all the text in the entry
+       e1_win2.insert(0, '') #Insert blank for user input
+       e1_win2.config(fg = 'black')
+def on_focusout(event):
+    if e1_win2.get() == '':
+        e1_win2.insert(0, 'yyyy')
+        e1_win2.config(fg = 'grey')
+
+
+
 
 #main window:
 root = Tk()
@@ -85,6 +105,9 @@ if newWin==True:
     drop2 = OptionMenu(win2, clicked2, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
     drop2.grid(row=0, column=2);
     e1_win2.insert(END, "yyyy");
+    e1_win2.bind('<FocusIn>', on_entry_click)
+    e1_win2.bind('<FocusOut>', on_focusout)
+    e1_win2.config(fg='grey')
     e1_win2.grid(row=0, column=3);
     bt1_win2=Button(win2, text="Save", command=lambda:saveBirthday(),width=10)
     bt1_win2.grid(row=0, column=4)
